@@ -57,9 +57,10 @@ var onload = function() {
     return m;
   }();
   el.lang = document.getElementById('lang');
-  for (i=0;i<inle.languages.length;i++) {
+  var languages = ['#tamil', '#hindi'];
+  for (i=0;i<languages.length;i++) {
     option = document.createElement('option');
-    option.value = option.text = inle.languages[i];
+    option.value = option.text = languages[i];
     el.lang.add(option);
   };
   el.itrans = document.getElementById('itrans');
