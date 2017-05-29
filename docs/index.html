@@ -41,7 +41,7 @@ button,hr,input{overflow:visible}audio,canvas,progress,video{display:inline-bloc
 <h1 class="mt0">INdian Language Enablement</h1>
 <form class="black-80">
   <select id="lang"></select>
-  <input id="entxt" class="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" aria-describedby="itrans" placeholder="choose your language and type in english here">
+  <input id="entxt" class="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" aria-describedby="itrans" placeholder="type in english to tamizh தமிழ்">
   <small id="itrans" class="f6 black-70 db mb2"></small>
 </form>
 </section>
@@ -57,16 +57,28 @@ var onload = function() {
     return m;
   }();
   el.lang = document.getElementById('lang');
-  var languages = ['#tamil', '#hindi'];
-  for (i=0;i<languages.length;i++) {
-    option = document.createElement('option');
-    option.value = option.text = languages[i];
-    el.lang.add(option);
-  };
   el.itrans = document.getElementById('itrans');
   el.entxt = document.getElementById('entxt');
+
+  var languages = [['#tamil', 'தமிழ்', 'A~Nkilattukku nigarA^na thamizh choRkaL aRiya i~Nku ezhuthu~NgaL'], ['#hindi', 'हिंदी', 'angrezee se hiMdee']];
+  for (i=0;i<languages.length;i++) {
+    option = document.createElement('option');
+    option.value = languages[i][0];
+    option.text = languages[i][1];
+    el.lang.add(option);
+  };
+  el.lang.onchange = function(evt) {
+    el.entxt.placeholder = ('#tamil' == el.lang.value) ? languages[0][2] : languages[1][2];
+    el.itrans.innerText = inle.transliterate(el.lang.value, el.entxt.placeholder);
+  };
+  el.lang.onchange();
   el.entxt.oninput = function(evt) {
-    el.itrans.innerText = inle.transliterate(el.lang.value, this.value);
+    var s = this.value.trim();
+    if (s.length > 0) {
+      el.itrans.innerText = inle.transliterate(el.lang.value, s);
+    } else {
+      el.itrans.innerText = inle.transliterate(el.lang.value, ('#tamil' == el.lang.value) ? languages[0][2] : languages[1][2]);
+    };
   };
   el.itrans.focus();
 };
