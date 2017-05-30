@@ -146,10 +146,17 @@ var onload = function() {
     selector: '#predtxt',
     minChars: 1,
     source: function(term, suggest){
-      term = term.toLowerCase();
+      isunicode = (term.charCodeAt(0) > 127);
+      if (!isunicode) term = term.toLowerCase();
+      var idx = ('#tamil' == el.predtxtlang.value) ? 2 : 1;
       var suggestions = [];
       for (i in tblpredtxt) {
-        if (~tblpredtxt[i][0].indexOf(term)) suggestions.push(tblpredtxt[i]);
+        if (isunicode) {
+          //unicode-prediction - assume language is set
+          if (~tblpredtxt[i][idx].indexOf(term)) suggestions.push(tblpredtxt[i]);
+        } else {
+          if (~tblpredtxt[i][0].indexOf(term)) suggestions.push(tblpredtxt[i]);
+        }
       }
       suggest(suggestions);
     },
