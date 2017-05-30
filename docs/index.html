@@ -138,7 +138,10 @@ var onload = function() {
   };
   el.txtlang.onchange = el.plaintxt.oninput = trantxt;
 
-
+  el.predtxtlang.onchange = function(evt) {
+    el.predtxt.value = '';
+    el.predtxt.focus();
+  };
   inleac = new autoComplete({
     selector: '#predtxt',
     minChars: 1,
