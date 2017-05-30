@@ -95,16 +95,16 @@ var tblpredtxt = [
 ['duronto express', 'दुरांतो एक्सप्रेस', 'துரன்டோ எக்ஸ்பிரஸ்'],
 ['rajdhani express', 'राजधानी एक्सप्रेस', 'ராஜ்தானி எக்ஸ்பிரஸ்'],
 
-['salil chaoudhuri', 'सलिल चौधरी', 'சலில் சவுதூரி'],
-['maya sharma', 'माया शर्मा', 'மாயா ஷர்மா'],
-['beniprasad rai', 'बेनीप्रसाद राई', 'பெனிபிரசாத் ராய்'],
-['chinnu yadav', 'चिन्नु यादव', 'சின்னம் யாதவ்'],
-['hemlata kusum', 'हेमलता कुसुम', 'ஹெம்லட்டா குசும்'],
-['priyanka verma', 'प्रियंका वर्मा', 'பிரியங்கா வர்மா'],
-['abhay kumar singh', 'अभय कुमार सिंह', 'அபய் குமார் சிங்'],
+['salIla chaudhuri', 'सलिल चौधरी', 'சலில் சவுதூரி'],
+['mAyA sharmA', 'माया शर्मा', 'மாயா ஷர்மா'],
+['beniprasAda rAy', 'बेनीप्रसाद राई', 'பெனிபிரசாத் ராய்'],
+['chinnu yAdava', 'चिन्नु यादव', 'சின்னம் யாதவ்'],
+['hemalatA kusum', 'हेमलता कुसुम', 'ஹெம்லட்டா குசும்'],
+['priyAMkA varmA', 'प्रियंका वर्मा', 'பிரியங்கா வர்மா'],
+['abhaya kumar siMha', 'अभय कुमार सिंह', 'அபய் குமார் சிங்'],
 ['mahesh mittal', 'महेश मित्तल', 'மகேஷ் மிட்டல்'],
-['omkar gupta', 'ओमकार गुप्ता', 'ஓம்கார் குப்தா'],
-['rahul ojha', 'राहुल ओझा', 'ராகுல் ஓஜா'],
+['oMkAra guptA', 'ओमकार गुप्ता', 'ஓம்கார் குப்தா'],
+['rAhul ojhA', 'राहुल ओझा', 'ராகுல் ஓஜா'],
 ];
 
 function trantxt() {
@@ -113,7 +113,21 @@ function trantxt() {
     s = ('#tamil' == el.txtlang.value) ? languages[0][2] : languages[1][2];
     el.plaintxt.placeholder = s;
   }
-  el.inletxt.innerText = inle.transliterate(el.txtlang.value, s) + '\n\n' + s;
+  var isunicode = (s.charCodeAt(0) > 127);
+  var idx = ('#tamil' == el.predtxtlang.value) ? 2 : 1;
+  var found = false;
+  if (isunicode) {
+    //try-and-match with dictionary
+    for (i in tblpredtxt) {
+      if (s == tblpredtxt[i][idx]) {
+        found = true;
+        el.inletxt.innerText = s + '\n\n' + tblpredtxt[i][0];
+      }
+    }
+  };
+  if (!found) {
+    el.inletxt.innerText = inle.transliterate(el.txtlang.value, s) + '\n\n' + s;
+  }
 }
 
 var onload = function() {
@@ -156,7 +170,7 @@ var onload = function() {
           //unicode-prediction - assume language is set
           if (~tblpredtxt[i][idx].indexOf(term)) suggestions.push(tblpredtxt[i]);
         } else {
-          if (~tblpredtxt[i][0].indexOf(term)) suggestions.push(tblpredtxt[i]);
+          if (~tblpredtxt[i][0].toLowerCase().indexOf(term)) suggestions.push(tblpredtxt[i]);
         }
       }
       suggest(suggestions);
@@ -166,7 +180,7 @@ var onload = function() {
       search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&amp;');
       var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
       var idx = ('#tamil' == el.predtxtlang.value) ? 2 : 1;
-      return '<div class="autocomplete-suggestion" data-txt="'+item[idx]+'">'+item[(isunicode?idx:0)].replace(re, "<b>$1</b>")+' ' +item[idx]+'</div>';
+      return '<div class="autocomplete-suggestion" data-txt="'+item[idx]+'">'+item[(isunicode?idx:0)].replace(re, "<b>$1</b>")+' ' +item[(isunicode?0:idx)]+'</div>';
     },
     onSelect: function(e, term, item){
       el.predtxt.value = item.getAttribute('data-txt');
