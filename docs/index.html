@@ -151,8 +151,10 @@ var onload = function() {
       suggest(suggestions);
     },
     renderItem: function (item, search){
+      search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&amp;');
+      var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
       var idx = ('#tamil' == el.predtxtlang.value) ? 2 : 1;
-      return '<div class="autocomplete-suggestion" data-txt="'+item[idx]+'">'+item[idx]+'</div>';
+      return '<div class="autocomplete-suggestion" data-txt="'+item[idx]+'">'+item[0].replace(re, "<b>$1</b>")+' ' +item[idx]+'</div>';
     },
     onSelect: function(e, term, item){
       el.predtxt.value = item.getAttribute('data-txt');
